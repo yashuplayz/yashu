@@ -42,7 +42,7 @@ const ProfilePage = () => {
               
             </div>
             <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Can't Upload photos we are working on it "}
+              {isUpdatingProfile ? "Uploading..." : "Can't Upload photos , Everyone are Beautiful thou! <3 "}
             </p>
           </div>
 
