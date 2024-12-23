@@ -1,4 +1,4 @@
-const AuthImagePattern = ({ title, subtitle }) => {
+Authimage update : const AuthImagePattern = ({ title, subtitle }) => {
   return (
     <div className="hidden lg:flex items-center justify-center bg-base-200 p-12">
       <div className="max-w-md text-center">
@@ -6,7 +6,7 @@ const AuthImagePattern = ({ title, subtitle }) => {
           {[...Array(9)].map((_, i) => (
             <div
               key={i}
-              className={`aspect-square rounded-2xl bg-primary/10 ${
+              className={`aspect-circle rounded-2xl bg-primary/10 ${
                 i % 2 === 0 ? "animate-pulse" : ""
               }`}
             />
@@ -18,5 +18,3 @@ const AuthImagePattern = ({ title, subtitle }) => {
     </div>
   );
 };
-
-export default AuthImagePattern;
