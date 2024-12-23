@@ -20,6 +20,8 @@ const NoChatSelected = () => {
         <h2 className="text-2xl font-bold">Welcome to Chattu!</h2>
         <p className="text-base-content/60">
           Select a conversation from the sidebar to start chatting With New People Around!
+          Connect with Stangers, Anonymous Chat And Share feelings Build Friendship & Love
+        Make Sure Your 18+ , Enjoy a safe and respectful Environment! so Letsss Gooooo!
         </p>
       </div>
     </div>
