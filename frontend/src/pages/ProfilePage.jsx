@@ -61,7 +61,9 @@ const ProfilePage = () => {
               </label>
             </div>
             <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+              {isUpdatingProfile ? "Uploading... Please Wait..." : "Click the camera icon to update your photo Make Sure its below 60KB Or"}
+              
+              <a href='https://imagecompressor.11zon.com/en/compress-jpg/compress-jpg-to-60kb/' target='_blank' rel='noreferrer' className="text-zinc-900 flex items-center"> &#8594;Click here to Compress IMG to 60KB</a>
             </p>
           </div>
 
