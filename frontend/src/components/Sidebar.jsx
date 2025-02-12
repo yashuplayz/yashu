@@ -2,17 +2,48 @@ import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-import { Users } from "lucide-react";
+import { Users, MessageSquareDot, Bell } from "lucide-react";
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
-
-  const { onlineUsers } = useAuthStore();
+  const { getUsers, users, selectedUser, setSelectedUser, messages, subscribeToMessages, unsubscribeFromMessages, isUsersLoading, getUnreadMessages } = useChatStore();
+  const { onlineUsers, authUser } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState({});
 
   useEffect(() => {
     getUsers();
-  }, [getUsers]);
+    subscribeToMessages();
+    fetchUnreadMessages(); // Fetch unread messages from the backend
+
+    return () => unsubscribeFromMessages();
+  }, [getUsers, subscribeToMessages, unsubscribeFromMessages]);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      const latestMessage = messages[messages.length - 1];
+      if (latestMessage.senderId !== authUser._id) {
+        setUnreadMessages((prev) => ({
+          ...prev,
+          [latestMessage.senderId]: true,
+        }));
+      }
+    }
+  }, [messages, authUser._id]);
+
+  useEffect(() => {
+    // Reset unread message notifications for the selected user
+    if (selectedUser && unreadMessages[selectedUser._id]) {
+      setUnreadMessages((prev) => ({
+        ...prev,
+        [selectedUser._id]: false,
+      }));
+    }
+  }, [selectedUser]);
+
+  const fetchUnreadMessages = async () => {
+    const unreadMessages = await getUnreadMessages();
+    setUnreadMessages(unreadMessages);
+  };
 
   const filteredUsers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user._id))
@@ -26,6 +57,9 @@ const Sidebar = () => {
         <div className="flex items-center gap-2">
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">Find People</span>
+          {Object.values(unreadMessages).some((isUnread) => isUnread) && (
+            <Bell className="size-6 text-green-500" />
+          )}
         </div>
         {/* TODO: Online filter toggle */}
         <div className="mt-3 hidden lg:flex items-center gap-2">
@@ -46,7 +80,13 @@ const Sidebar = () => {
         {filteredUsers.map((user) => (
           <button
             key={user._id}
-            onClick={() => setSelectedUser(user)}
+            onClick={() => {
+              setSelectedUser(user);
+              setUnreadMessages((prev) => ({
+                ...prev,
+                [user._id]: false,
+              }));
+            }}
             className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
@@ -64,6 +104,9 @@ const Sidebar = () => {
                   className="absolute bottom-0 right-0 size-3 bg-green-500 
                   rounded-full ring-2 ring-zinc-900"
                 />
+              )}
+              {unreadMessages[user._id] && (
+                <MessageSquareDot className="absolute top-0 right-0 w-4 h-4 text-green-900" />
               )}
             </div>
 
@@ -84,4 +127,5 @@ const Sidebar = () => {
     </aside>
   );
 };
+
 export default Sidebar;
